@@ -97,7 +97,7 @@ public static final double BALANCE_REVERSE_POWER = 1.3;  //change as needed
 
 
 public static final double QUICKTURN_TIMEOUT = 5;
-public static final double TURN_PID_kP = .01;
+public static final double TURN_PID_kP = .1;
 public static final double TURN_PID_KI = 0;
 public static final double TURN_PID_kD = 0.0025;
 

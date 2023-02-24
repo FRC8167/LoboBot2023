@@ -17,8 +17,9 @@ public class TurnPID extends CommandBase {
   
   /** Creates a new TurnPID. */
   public TurnPID (Drivetrain drivetrain, double turnAngle ) {
+    drivetrain.turnPID.reset();
     drivetrain.turnPID.enableContinuousInput(-180, 180);
-    drivetrain.turnPID.setTolerance(3, 5);  //how close is close enough?
+    drivetrain.turnPID.setTolerance(0.05, 0.1);  //how close is close enough?
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
     this.turnAngle = turnAngle;
@@ -38,10 +39,12 @@ public class TurnPID extends CommandBase {
   @Override
   public void execute() {
     targetHeading = (initialAngle + turnAngle);
-    drivetrain.turnPID.calculate(drivetrain.getYaw(), targetHeading);
-    if(!drivetrain.turnPID.atSetpoint()) {
-      drivetrain.arcadeDrive(0, drivetrain.turnPID.calculate(drivetrain.getYaw(), targetHeading));
-    }
+    var turnStrength = Math.max(
+      drivetrain.turnPID.calculate(drivetrain.getYaw(), targetHeading),
+      0.4
+    );
+
+    drivetrain.arcadeDrive(0, turnStrength);
   }
 
   // Called once the command ends or is interrupted.
