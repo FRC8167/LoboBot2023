@@ -14,6 +14,8 @@ public class TurnPID extends CommandBase {
   double targetHeading;
   double initialAngle; 
   double startTurnTime;
+  double reversed;
+  
   
   /** Creates a new TurnPID. */
   public TurnPID (Drivetrain drivetrain, double turnAngle ) {
@@ -23,6 +25,7 @@ public class TurnPID extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
     this.turnAngle = turnAngle;
+    this.reversed = ((this.turnAngle < 0)?-1:1);
     addRequirements(drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -43,8 +46,8 @@ public class TurnPID extends CommandBase {
       drivetrain.turnPID.calculate(drivetrain.getYaw(), targetHeading),
       0.4
     );
-
-    drivetrain.arcadeDrive(0, turnStrength);
+    
+    drivetrain.arcadeDrive(0, reversed*turnStrength);
   }
 
   // Called once the command ends or is interrupted.
