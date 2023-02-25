@@ -29,9 +29,12 @@ public class ChargingStationAutoBalance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    this.currentPitchAngle = drivetrain.getPitch();
-    error = Constants.BALANCE_GOAL_DEGREES - currentPitchAngle;
-    drivePower = -Math.min(Constants.BALANCE_KP * error, 1);
+    this.currentPitchAngle = -drivetrain.getPitch();
+    error = currentPitchAngle - Constants.BALANCE_GOAL_DEGREES;
+    drivePower = Math.min(0.025 * error, 1);  //Constants.BALANCE_KP
+    System.out.println("Current Pitch Angle: " + currentPitchAngle);
+    System.out.println("Pitch Error: " + error);
+    System.out.println("Balancing Drive Power: " + drivePower);
 
     //Just in case more or less power is needed for a backwards approach due to weight imbalance back vs front
     if (drivePower < 0) {
@@ -39,15 +42,13 @@ public class ChargingStationAutoBalance extends CommandBase {
     }
 
     //Limit max drivePower to minimize overshooting
-    if (Math.abs(drivePower) > 0.4) {
-      drivePower = Math.copySign(0.4, drivePower);
-    }
-    drivetrain.arcadeDrive(drivePower, 0);
+    // if (Math.abs(drivePower) > 0.6) {
+    //   drivePower = Math.copySign(0.6, drivePower);
+    // }
+    drivetrain.arcadeDrive(-drivePower, 0);
 
     //Check error conditions
-    System.out.println("Current Pitch Angle: " + currentPitchAngle);
-    System.out.println("Pitch Error: " + error);
-    System.out.println("Balancing Drive Power: " + drivePower);
+   
   
   }
 
@@ -60,6 +61,6 @@ public class ChargingStationAutoBalance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(error) < Constants.BALANCE_PITCH_THRESHOLD;  //this ends the auto command
+    return Math.abs(error) < 1.0;  //Constants.BALANCE_PITCH_THRESHOLD;  //this ends the auto command
   }
 }

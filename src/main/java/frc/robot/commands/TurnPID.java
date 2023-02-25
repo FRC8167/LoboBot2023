@@ -19,13 +19,14 @@ public class TurnPID extends CommandBase {
   
   /** Creates a new TurnPID. */
   public TurnPID (Drivetrain drivetrain, double turnAngle ) {
-    drivetrain.turnPID.reset();
+    //drivetrain.turnPID.reset();
     drivetrain.turnPID.enableContinuousInput(-180, 180);
-    drivetrain.turnPID.setTolerance(0.05, 0.1);  //how close is close enough?
+    drivetrain.turnPID.setTolerance(1, 0.1);  //how close is close enough?
+  
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
     this.turnAngle = turnAngle;
-    this.reversed = ((this.turnAngle < 0)?-1:1);
+    //this.reversed = ((this.turnAngle < 0)?-1:1);
     addRequirements(drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -42,12 +43,14 @@ public class TurnPID extends CommandBase {
   @Override
   public void execute() {
     targetHeading = (initialAngle + turnAngle);
-    var turnStrength = Math.max(
-      drivetrain.turnPID.calculate(drivetrain.getYaw(), targetHeading),
-      0.4
-    );
+    drivetrain.turnPID.calculate(drivetrain.getYaw(), targetHeading);
     
-    drivetrain.arcadeDrive(0, reversed*turnStrength);
+    if (!drivetrain.turnPID.atSetpoint()){
+      drivetrain.arcadeDrive(0, drivetrain.turnPID.calculate(drivetrain.getYaw(), targetHeading));
+    }
+    System.out.println("Current yaw = " + drivetrain.getYaw());
+    System.out.println("Error= " + (targetHeading - drivetrain.getYaw()));
+          
   }
 
   // Called once the command ends or is interrupted.

@@ -23,12 +23,12 @@ import frc.robot.commands.DriveForwardTimed;
 import frc.robot.commands.QuickTurn;
 import frc.robot.commands.SetArmDistance;
 import frc.robot.commands.TurnPID;
-import frc.robot.commands.TurnToTrackedTarget;
+//import frc.robot.commands.TurnToTrackedTarget;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Vision;
+//import frc.robot.subsystems.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -42,7 +42,7 @@ public class RobotContainer {
   private final Drivetrain drivetrain = new Drivetrain();
  // private final Grabber grabber = new Grabber();
   //private final Arm arm = new Arm();
-  private final Vision vision  = new Vision();
+  //private final Vision vision  = new Vision();
  // private final Pivot pivot = new Pivot();
 
   private final SendableChooser<Command> autoCommandSelector = new SendableChooser<>();
@@ -85,12 +85,12 @@ public class RobotContainer {
   private void configureBindings() {
     
   //driverController.leftBumper().onTrue(new InstantCommand(() -> grabber.toggle()));
-  // operatorController.rightBumper().whileTrue(new ChargingStationAutoBalance(drivetrain));
+  operatorController.rightBumper().whileTrue(new ChargingStationAutoBalance(drivetrain));
 
 
   driverController.x().onTrue(new TurnPID(drivetrain, 90));
   driverController.y().onTrue(new TurnPID(drivetrain, 180));
-  driverController.a().whileTrue(new TurnToTrackedTarget(drivetrain, vision, Constants.TRACK_TAG_ROTATION_KP));
+  //driverController.a().whileTrue(new TurnToTrackedTarget(drivetrain, vision, Constants.TRACK_TAG_ROTATION_KP));
 
 
   //operatorController.a().onTrue(new SetArmDistance(arm, 5.0));  //extend  
